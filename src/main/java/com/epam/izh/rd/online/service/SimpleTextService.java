@@ -1,5 +1,9 @@
 package com.epam.izh.rd.online.service;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class SimpleTextService implements TextService {
 
     /**
@@ -13,7 +17,7 @@ public class SimpleTextService implements TextService {
      */
     @Override
     public String removeString(String base, String remove) {
-        return null; //TODO
+        return base.replaceAll(remove, "");
     }
 
     /**
@@ -24,7 +28,7 @@ public class SimpleTextService implements TextService {
      */
     @Override
     public boolean isQuestionString(String text) {
-        return false; //TODO
+        return text.length() > 1 ? text.charAt(text.length()-1) == '?' : text.equals("?");
     }
 
     /**
@@ -35,7 +39,7 @@ public class SimpleTextService implements TextService {
      */
     @Override
     public String concatenate(String... elements) {
-        return null; //TODO
+        return Arrays.stream(elements).reduce("", String::concat);
     }
 
     /**
@@ -47,7 +51,12 @@ public class SimpleTextService implements TextService {
      */
     @Override
     public String toJumpCase(String text) {
-        return null; //TODO
+        if (text.length() < 2) return text.toUpperCase();
+        return IntStream.range(0, text.length())
+                .mapToObj(i -> i % 2 == 1
+                        ? text.substring(i, i + 1).toUpperCase()
+                        : text.substring(i, i + 1).toLowerCase())
+                .collect(Collectors.joining());
     }
 
     /**
@@ -59,6 +68,8 @@ public class SimpleTextService implements TextService {
      */
     @Override
     public boolean isPalindrome(String string) {
-       return false; //TODO
+        String str = string.toLowerCase().replaceAll("[^а-яА-Я]", "");
+        if (str.equals("")) return false;
+        return (new StringBuilder(str).reverse().toString()).equals(str);
     }
 }
